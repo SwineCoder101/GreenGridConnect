@@ -2,10 +2,16 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
+// OrderManagement contract that allows users to create and fulfill orders
+// Admin can fulfill orders
+// Consumer can create orders
+// Admin can grant and revoke roles
 contract OrderManagement is AccessControl {
     bytes32 public constant CONSUMER_ROLE = keccak256("CONSUMER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
+
+    // add Enum status for order
     struct Order {
         address buyer;
         uint256 amount;
@@ -24,6 +30,8 @@ contract OrderManagement is AccessControl {
         grantRole(ADMIN_ROLE, msg.sender);
     }
 
+
+    //Initial Order Creation, order is not fulfilled until user confirms
     function createOrder(uint256 amount, uint256 price) external {
         require(hasRole(CONSUMER_ROLE, msg.sender), "Must have consumer role to create order");
         orderCount++;
@@ -31,6 +39,7 @@ contract OrderManagement is AccessControl {
         emit OrderCreated(orderCount, msg.sender, amount, price);
     }
 
+    // User Confirms Order
     function fulfillOrder(uint256 id) external {
         Order storage order = orders[id];
         require(hasRole(ADMIN_ROLE, msg.sender), "Must have admin role to fulfill order");
@@ -42,6 +51,7 @@ contract OrderManagement is AccessControl {
         emit OrderFulfilled(id);
     }
 
+    //user deletes order
     function cancelOrder(uint256 id) external {
         Order storage order = orders[id];
         require(msg.sender == order.buyer, "Only buyer can cancel order");

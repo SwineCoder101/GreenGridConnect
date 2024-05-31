@@ -3,6 +3,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
+// TEC is ERC20 token that represents a tokenized energy credit
+// Producers can mint TECs and consumers can burn TECs
+// Mint.club have bonding curves that allow users to mint and burn tokens, migrating to a new contract
 contract TEC is ERC20, AccessControl {
     bytes32 public constant PRODUCER_ROLE = keccak256("PRODUCER_ROLE");
     bytes32 public constant CONSUMER_ROLE = keccak256("CONSUMER_ROLE");

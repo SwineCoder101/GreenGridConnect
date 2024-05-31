@@ -3,11 +3,15 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./TEC.sol";
 
+// Marketplace contract that allows producers to create listings and consumers to purchase TECs
+// Admin can create listings and purchase TECs
+// Admin can grant and revoke roles
 contract Marketplace is AccessControl {
     bytes32 public constant PRODUCER_ROLE = keccak256("PRODUCER_ROLE");
     bytes32 public constant CONSUMER_ROLE = keccak256("CONSUMER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
+    //expand on listing details
     struct Listing {
         address seller;
         uint256 amount;
@@ -25,8 +29,8 @@ contract Marketplace is AccessControl {
 
     constructor(TEC _tec) {
         tec = _tec;
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(ADMIN_ROLE, msg.sender);
+        grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        grantRole(ADMIN_ROLE, msg.sender);
     }
 
     function createListing(uint256 amount, uint256 price) external {
