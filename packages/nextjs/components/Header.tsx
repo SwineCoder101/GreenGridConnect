@@ -48,18 +48,18 @@ export const HeaderMenuLinks = () => {
  */
 export const Header = () => {
   return (
-    <div className="flex sticky lg:static top-0 bg-transparent min-h-0 flex-shrink-0 justify-between z-20 px-8 py-6">
+    <div className="flex sticky lg:static top-0 bg-transparent min-h-0 flex-shrink-0 justify-between z-20 py-6">
       <div className="flex items-center space-x-4">
         <Link href="/" passHref className="flex items-center gap-2 shrink-0">
           <div className="flex relative w-10 h-10">
-            <Image alt="GGC logo" className="cursor-pointer" fill src="/logo.svg" />
+            <Image alt="GGC logo" className="cursor-pointer rounded-lg" fill src="/logo.svg" />
           </div>
           <div className="flex flex-col">
             <span className="font-bold leading-tight">GreenGridConnect</span>
             <span className="text-xs text-neutral-400">Make the Earth a better place</span>
           </div>
         </Link>
-        <div className="rounded-lg px-3 py-1.5 bg-neutral-800 w-[400px] h-10 focus-within:ring-2 focus-within:ring-neutral-600 hover:ring-2 hover:ring-neutral-600 duration-150 ease-in-out">
+        <div className="rounded-xl px-3 py-1.5 bg-neutral-800 w-[400px] h-10 focus-within:ring-2 focus-within:ring-neutral-600 hover:ring-2 hover:ring-neutral-600 duration-150 ease-in-out">
           <input
             type="text"
             className="w-full bg-transparent outline-none text-sm placeholder-neutral-600"
