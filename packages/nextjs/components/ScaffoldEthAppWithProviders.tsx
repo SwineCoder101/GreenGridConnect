@@ -26,7 +26,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen bg-neutral-900">
         <Header />
         <main className="relative flex flex-col flex-1">{children}</main>
         {/* <Footer /> */}
@@ -59,7 +59,13 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
         <ProgressBar />
         <RainbowKitProvider
           avatar={BlockieAvatar}
-          theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
+          theme={
+            mounted
+              ? isDarkMode
+                ? darkTheme({ accentColor: "white", accentColorForeground: "black" })
+                : lightTheme()
+              : lightTheme()
+          }
         >
           <ScaffoldEthApp>{children}</ScaffoldEthApp>
         </RainbowKitProvider>
