@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
     const options = {
       title: {
-        text: "Price per token",
+        text: "Price per unit of energy",
       },
       tooltip: {
         trigger: "axis",
@@ -58,12 +58,150 @@ const Home: NextPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const chartMap = echarts.init(document.getElementById("chartMap") as HTMLDivElement);
+    let options = "";
+
+    fetch("/ireland_complete.svg")
+      .then(response => response.text())
+      .then(svg => {
+        // Registrar o mapa com o conteúdo do SVG
+        echarts.registerMap("ireland_complete.svg", { svg: svg });
+
+        options = {
+          title: {
+            text: "Map of consumers",
+          },
+          tooltip: {
+            show: true,
+            formatter: function (params) {
+              if (params.value && params.value.length >= 3) {
+                const description = params.value[2];
+                return description;
+              } else {
+                return "";
+              }
+            },
+          },
+          geo: {
+            map: "ireland_complete.svg",
+            roam: true,
+          },
+          series: {
+            type: "custom",
+            coordinateSystem: "geo",
+            geoIndex: 0,
+            zlevel: 1,
+            data: [
+              [650, 520, "Clonshaugh Industrial Estate"],
+              [270, 530, "Sleepless"],
+              [350, 870, "CIX - Cork Internet eXchange"],
+
+              [630, 525, "EdgeConneX Dublin Campus"],
+              [620, 545, "Profile Park Kilcarbery"],
+              [650, 620, "Echelon"],
+            ],
+            renderItem(params, api) {
+              const coord = api.coord([api.value(0, params.dataIndex), api.value(1, params.dataIndex)]);
+              const circles = [];
+              for (let i = 0; i < 5; i++) {
+                circles.push({
+                  type: "circle",
+                  shape: {
+                    cx: 0,
+                    cy: 0,
+                    r: 30,
+                  },
+                  style: {
+                    stroke: "red",
+                    fill: "none",
+                    lineWidth: 2,
+                  },
+                  keyframeAnimation: {
+                    duration: 4000,
+                    loop: true,
+                    delay: (-i / 4) * 4000,
+                    keyframes: [
+                      {
+                        percent: 0,
+                        scaleX: 0,
+                        scaleY: 0,
+                        style: {
+                          opacity: 1,
+                        },
+                      },
+                      {
+                        percent: 1,
+                        scaleX: 1,
+                        scaleY: 0.4,
+                        style: {
+                          opacity: 0,
+                        },
+                      },
+                    ],
+                  },
+                });
+              }
+              return {
+                type: "group",
+                x: coord[0],
+                y: coord[1],
+                children: [
+                  ...circles,
+                  {
+                    type: "path",
+                    shape: {
+                      d: "M16 0c-5.523 0-10 4.477-10 10 0 10 10 22 10 22s10-12 10-22c0-5.523-4.477-10-10-10zM16 16c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z",
+                      x: -10,
+                      y: -35,
+                      width: 20,
+                      height: 40,
+                    },
+                    style: {
+                      fill: "red",
+                    },
+                    keyframeAnimation: {
+                      duration: 1000,
+                      loop: true,
+                      delay: Math.random() * 1000,
+                      keyframes: [
+                        {
+                          y: -10,
+                          percent: 0.5,
+                          easing: "cubicOut",
+                        },
+                        {
+                          y: 0,
+                          percent: 1,
+                          easing: "bounceOut",
+                        },
+                      ],
+                    },
+                  },
+                ],
+              };
+            },
+          },
+        };
+
+        console.log("optionsx: ", options);
+        chartMap.setOption(options);
+      })
+      .catch(error => {
+        console.error("Erro ao carregar o arquivo SVG:", error);
+      });
+
+    return () => {
+      chartMap.dispose();
+    };
+  }, []);
+
   return (
     <>
       <div className="flex justify-center">
         <div className="w-1/5 mr-4">
           <div className="p-4 bg-white shadow-md rounded-lg text-center">
-            <h3 className="text-base font-semibold text-black mb-1">Energy Availability per month (KWh)</h3>
+            <h3 className="text-base font-semibold text-black mb-1">Energy Availability (KWh)</h3>
             <p className="text-2xl font-bold text-blue-600">500.000</p>
           </div>
         </div>
@@ -94,7 +232,15 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div id="chartPricePerToken" className="mt-5 ml-6" style={{ width: "50%", height: "450px" }}></div>
+      <div className="flex justify-center">
+        <div className="w-1/2 mr-4">
+          <div id="chartPricePerToken" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
+        </div>
+
+        <div className="w-1/2 mr-4">
+          <div id="chartMap" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
+        </div>
+      </div>
     </>
   );
 };
