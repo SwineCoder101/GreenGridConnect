@@ -1,3 +1,4 @@
+import { defineChain } from "viem";
 import * as chains from "viem/chains";
 
 export type ScaffoldConfig = {
@@ -8,9 +9,34 @@ export type ScaffoldConfig = {
   onlyLocalBurnerWallet: boolean;
 };
 
+const energyWeb = defineChain({
+  id: 73799,
+  name: "Volta",
+  iconUrl: "https://cryptologos.cc/logos/energy-web-token-ewt-logo.png",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Volta",
+    symbol: "VT",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://volta-rpc.energyweb.org"],
+    },
+  },
+  blockExplorers: {
+    default: { name: "Explorer", url: "http://volta-explorer.energyweb.org" },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 5882,
+    },
+  },
+});
+
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.base],
+  targetNetworks: [energyWeb],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)
