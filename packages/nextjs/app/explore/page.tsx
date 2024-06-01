@@ -1,9 +1,9 @@
 "use client";
 
 // import Link from "next/link";
+import { useEffect, useState } from "react";
 import Marketplace from "./components/marketplace";
 import type { NextPage } from "next";
-import { useTheme } from "next-themes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~~/components/ui/tabs";
 
 // import { useAccount } from "wagmi";
@@ -12,8 +12,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~~/components/ui/tabs"
 
 const Home: NextPage = () => {
   // const { address: connectedAddress } = useAccount();
-  const { resolvedTheme } = useTheme();
-  console.log(resolvedTheme);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
 
   return (
     <>
