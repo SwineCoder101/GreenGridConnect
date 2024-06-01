@@ -27,7 +27,7 @@ const IMAGES = [
 export const randomProduct = (): Product => {
   const currency = CURRENCIES[getRandomInt(CURRENCIES.length)];
   return {
-    id: `${Date.now()}`,
+    id: window.crypto.randomUUID(),
     name: `${SOURCES[getRandomInt(SOURCES.length)]} @ ${LOCATIONS[getRandomInt(LOCATIONS.length)]}`,
     provider: PROVIDERS[getRandomInt(PROVIDERS.length)],
     verified: getRandomInt(2) === 0 ? false : true,
