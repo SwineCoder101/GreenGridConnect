@@ -10,6 +10,7 @@ import type { NextPage } from "next";
 // import { Address } from "~~/components/scaffold-eth";
 
 const Home: NextPage = () => {
+  //chartPricePerToken
   useEffect(() => {
     const chartPricePerToken = echarts.init(document.getElementById("chartPricePerToken") as HTMLDivElement);
 
@@ -58,6 +59,7 @@ const Home: NextPage = () => {
     };
   }, []);
 
+  // chartMap
   useEffect(() => {
     const chartMap = echarts.init(document.getElementById("chartMap") as HTMLDivElement);
     let options = "";
@@ -70,7 +72,7 @@ const Home: NextPage = () => {
 
         options = {
           title: {
-            text: "Map of consumers",
+            text: "Map of data centers",
           },
           tooltip: {
             show: true,
@@ -96,7 +98,6 @@ const Home: NextPage = () => {
               [650, 520, "Clonshaugh Industrial Estate"],
               [270, 530, "Sleepless"],
               [350, 870, "CIX - Cork Internet eXchange"],
-
               [630, 525, "EdgeConneX Dublin Campus"],
               [620, 545, "Profile Park Kilcarbery"],
               [650, 620, "Echelon"],
@@ -196,25 +197,89 @@ const Home: NextPage = () => {
     };
   }, []);
 
+  //chartConsumptionDataCenters
+  useEffect(() => {
+    const chartConsumptionDataCenters = echarts.init(
+      document.getElementById("chartConsumptionDataCenters") as HTMLDivElement,
+    );
+
+    const options = {
+      title: {
+        text: "Consumption (%) per data centers",
+        subtext: "May 2024",
+        left: "center",
+      },
+      tooltip: {
+        trigger: "item",
+        formatter: function (params) {
+          console.log(params);
+          return `${params.name}: ${params.data.value} KWh (${params.percent}%)`;
+        },
+      },
+      legend: {
+        orient: "horizontal",
+        bottom: "0",
+      },
+      dataset: [
+        {
+          source: [
+            { value: 17432, name: "Clonshaugh Industrial Estate" },
+            { value: 40763, name: "Sleepless" },
+            { value: 22124, name: "CIX - Cork Internet eXchange" },
+            { value: 10899, name: "EdgeConneX Dublin Campus" },
+            { value: 28556, name: "Profile Park Kilcarbery" },
+            { value: 29782, name: "Echelon" },
+          ],
+        },
+      ],
+      series: [
+        {
+          type: "pie",
+          radius: "50%",
+        },
+        {
+          type: "pie",
+          radius: "50%",
+          label: { position: "inside", formatter: "{d}%", color: "white", fontSize: 15 },
+          percentPrecision: 0,
+          emphasis: {
+            label: { show: true },
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        },
+      ],
+    };
+
+    chartConsumptionDataCenters.setOption(options);
+
+    return () => {
+      chartConsumptionDataCenters.dispose();
+    };
+  }, []);
+
   return (
     <>
       <div className="flex justify-center">
         <div className="w-1/5 mr-4">
           <div className="p-4 bg-white shadow-md rounded-lg text-center">
             <h3 className="text-base font-semibold text-black mb-1">Energy Availability (KWh)</h3>
-            <p className="text-2xl font-bold text-blue-600">500.000</p>
+            <p className="text-2xl font-bold text-blue-500">500.000</p>
           </div>
         </div>
         <div className="w-1/5 mr-4">
           <div className="p-4 bg-white shadow-md rounded-lg text-center">
             <h3 className="text-base font-semibold text-black mb-1">Energy remaining (KWh)</h3>
-            <p className="text-2xl font-bold text-red-400">350.444</p>
+            <p className="text-2xl font-bold text-red-500">350.444</p>
           </div>
         </div>
         <div className="w-1/5 mr-4">
           <div className="p-4 bg-white shadow-md rounded-lg text-center">
             <h3 className="text-base font-semibold text-black mb-1">Energy consumed (KWh)</h3>
-            <p className="text-2xl font-bold text-green-600">149.556</p>
+            <p className="text-2xl font-bold text-green-500">149.556</p>
           </div>
         </div>
         <div className="w-1/5">
@@ -235,6 +300,7 @@ const Home: NextPage = () => {
       <div className="flex justify-center">
         <div className="w-1/2 mr-4">
           <div id="chartPricePerToken" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
+          <div id="chartConsumptionDataCenters" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
         </div>
 
         <div className="w-1/2 mr-4">
