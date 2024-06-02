@@ -1,22 +1,42 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as echarts from "echarts";
-// import Link from "next/link";
 import type { NextPage } from "next";
-
-// import { useAccount } from "wagmi";
-// import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-// import { Address } from "~~/components/scaffold-eth";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { Button } from "~~/components/ui/button";
 
 const Home: NextPage = () => {
-  //chartPricePerToken
+  const chartIds = ["chartPricePerToken", "chartConsumptionDataCenters"];
+  const [currentChartIndex, setCurrentChartIndex] = useState(0);
+
+  const handleNextChart = () => {
+    const nextIndex = (currentChartIndex + 1) % chartIds.length;
+    setCurrentChartIndex(nextIndex);
+
+    document.getElementById(chartIds[currentChartIndex])?.classList.add("hidden");
+    document.getElementById(chartIds[nextIndex])?.classList.remove("hidden");
+
+    renderChartConsumptionDataCenters();
+    renderChartPricePerToken();
+  };
+
   useEffect(() => {
+    const chartInstance = renderChartPricePerToken();
+    return () => {
+      chartInstance.dispose();
+    };
+  }, []);
+
+  const renderChartPricePerToken = () => {
     const chartPricePerToken = echarts.init(document.getElementById("chartPricePerToken") as HTMLDivElement);
 
     const options = {
       title: {
         text: "Price per unit of energy",
+        textStyle: {
+          color: "white",
+        },
       },
       tooltip: {
         trigger: "axis",
@@ -54,10 +74,72 @@ const Home: NextPage = () => {
 
     chartPricePerToken.setOption(options);
 
-    return () => {
-      chartPricePerToken.dispose();
+    return chartPricePerToken;
+  };
+
+  const renderChartConsumptionDataCenters = () => {
+    const chartConsumptionDataCenters = echarts.init(
+      document.getElementById("chartConsumptionDataCenters") as HTMLDivElement,
+    );
+
+    const options = {
+      title: {
+        text: "Consumption (%) per data centers",
+        textStyle: {
+          color: "white",
+        },
+        subtext: "May 2024",
+        left: "center",
+      },
+      tooltip: {
+        trigger: "item",
+        formatter: function (params) {
+          return `${params.name}: ${params.data.value} KWh (${params.percent}%)`;
+        },
+      },
+      legend: {
+        orient: "horizontal",
+        bottom: "0",
+        textStyle: {
+          color: "white",
+        },
+      },
+      dataset: [
+        {
+          source: [
+            { value: 17432, name: "Clonshaugh Industrial Estate" },
+            { value: 40763, name: "Sleepless" },
+            { value: 22124, name: "CIX - Cork Internet eXchange" },
+            { value: 10899, name: "EdgeConneX Dublin Campus" },
+            { value: 28556, name: "Profile Park Kilcarbery" },
+            { value: 29782, name: "Echelon" },
+          ],
+        },
+      ],
+      series: [
+        {
+          type: "pie",
+          radius: "50%",
+        },
+        {
+          type: "pie",
+          radius: "50%",
+          label: { position: "inside", formatter: "{d}%", color: "white", fontSize: 15 },
+          percentPrecision: 0,
+          emphasis: {
+            label: { show: true },
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        },
+      ],
     };
-  }, []);
+
+    chartConsumptionDataCenters.setOption(options);
+  };
 
   // chartMap
   useEffect(() => {
@@ -73,6 +155,9 @@ const Home: NextPage = () => {
         options = {
           title: {
             text: "Map of data centers",
+            textStyle: {
+              color: "white",
+            },
           },
           tooltip: {
             show: true,
@@ -184,80 +269,14 @@ const Home: NextPage = () => {
             },
           },
         };
-
-        console.log("optionsx: ", options);
         chartMap.setOption(options);
       })
       .catch(error => {
-        console.error("Erro ao carregar o arquivo SVG:", error);
+        console.error("Error:", error);
       });
 
     return () => {
       chartMap.dispose();
-    };
-  }, []);
-
-  //chartConsumptionDataCenters
-  useEffect(() => {
-    const chartConsumptionDataCenters = echarts.init(
-      document.getElementById("chartConsumptionDataCenters") as HTMLDivElement,
-    );
-
-    const options = {
-      title: {
-        text: "Consumption (%) per data centers",
-        subtext: "May 2024",
-        left: "center",
-      },
-      tooltip: {
-        trigger: "item",
-        formatter: function (params) {
-          console.log(params);
-          return `${params.name}: ${params.data.value} KWh (${params.percent}%)`;
-        },
-      },
-      legend: {
-        orient: "horizontal",
-        bottom: "0",
-      },
-      dataset: [
-        {
-          source: [
-            { value: 17432, name: "Clonshaugh Industrial Estate" },
-            { value: 40763, name: "Sleepless" },
-            { value: 22124, name: "CIX - Cork Internet eXchange" },
-            { value: 10899, name: "EdgeConneX Dublin Campus" },
-            { value: 28556, name: "Profile Park Kilcarbery" },
-            { value: 29782, name: "Echelon" },
-          ],
-        },
-      ],
-      series: [
-        {
-          type: "pie",
-          radius: "50%",
-        },
-        {
-          type: "pie",
-          radius: "50%",
-          label: { position: "inside", formatter: "{d}%", color: "white", fontSize: 15 },
-          percentPrecision: 0,
-          emphasis: {
-            label: { show: true },
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: "rgba(0, 0, 0, 0.5)",
-            },
-          },
-        },
-      ],
-    };
-
-    chartConsumptionDataCenters.setOption(options);
-
-    return () => {
-      chartConsumptionDataCenters.dispose();
     };
   }, []);
 
@@ -286,21 +305,32 @@ const Home: NextPage = () => {
           <div className="flex justify-center">
             <div className="p-4 bg-green-500 shadow-md rounded-lg text-center mr-4">
               <h3 className="text-base font-semibold text-white mb-1">Profit</h3>
-              <p className="text-2xl font-bold text-white">€ 180.45</p>
+              <p className="text-2xl font-bold text-white">€ 56.831</p>
             </div>
 
             <div className="p-4 bg-red-500 shadow-md rounded-lg text-center">
               <h3 className="text-base font-semibold text-white mb-1">Loss</h3>
-              <p className="text-2xl font-bold text-white">€ 45.77</p>
+              <p className="text-2xl font-bold text-white">€ 133.168</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="flex justify-center">
-        <div className="w-1/2 mr-4">
+        <div className="w-1/2 mr-4 ">
           <div id="chartPricePerToken" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
-          <div id="chartConsumptionDataCenters" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
+          <div
+            id="chartConsumptionDataCenters"
+            className="mt-5 ml-6 hidden"
+            style={{ width: "100%", height: "470px" }}
+          ></div>
+
+          <div className="flex justify-center">
+            <Button variant="secondary" className="font-semibold" onClick={handleNextChart}>
+              <ArrowRightIcon className="w-3.5 h-3.5 mr-1" />
+              Next
+            </Button>
+          </div>
         </div>
 
         <div className="w-1/2 mr-4">
