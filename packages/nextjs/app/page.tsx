@@ -96,7 +96,7 @@ const Home: NextPage = () => {
       },
       tooltip: {
         trigger: "item",
-        formatter: function (params) {
+        formatter: function (params: { name: string; data: { value: number }; percent: number }) {
           return `${params.name}: ${params.data.value} KWh (${params.percent}%)`;
         },
       },
@@ -156,7 +156,7 @@ const Home: NextPage = () => {
       [290000, 280000, 245000, 220000, 215000, 195000, 124413],
       [210000, 220000, 255000, 280000, 285000, 305000, 375413],
     ];
-    const totalData = [];
+    const totalData: number[] = [];
     for (let i = 0; i < rawData[0].length; ++i) {
       let sum = 0;
       for (let j = 0; j < rawData.length; ++j) {
@@ -182,7 +182,7 @@ const Home: NextPage = () => {
         barWidth: "60%",
         label: {
           show: true,
-          formatter: params => Math.round(params.value * 1000) / 10 + "%",
+          formatter: (params: { value: number }) => Math.round(params.value * 1000) / 10 + "%",
         },
         itemStyle: {
           color: color,
@@ -225,7 +225,7 @@ const Home: NextPage = () => {
   // chartMap
   useEffect(() => {
     const chartMap = echarts.init(document.getElementById("chartMap") as HTMLDivElement);
-    let options = "";
+    let options: echarts.EChartsOption;
 
     fetch("/ireland_complete.svg")
       .then(response => response.text())
@@ -240,9 +240,10 @@ const Home: NextPage = () => {
               color: "white",
             },
           },
+          // @ts-ignore
           tooltip: {
             show: true,
-            formatter: function (params) {
+            formatter: function (params: { value: number[] }) {
               if (params.value && params.value.length >= 3) {
                 const description = params.value[2];
                 return description;
@@ -268,6 +269,7 @@ const Home: NextPage = () => {
               [620, 545, "Profile Park Kilcarbery"],
               [650, 620, "Echelon"],
             ],
+            // @ts-ignore
             renderItem(params, api) {
               const coord = api.coord([api.value(0, params.dataIndex), api.value(1, params.dataIndex)]);
               const circles = [];
@@ -363,33 +365,33 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div className="flex justify-center">
-        <div className="w-1/5 mr-4">
-          <div className="p-4 bg-white shadow-md rounded-lg text-center">
-            <h3 className="text-base font-semibold text-black mb-1">Energy Availability (KWh)</h3>
+      <div className="bg-neutral-800/40 rounded-xl p-4 flex justify-center items-center">
+        <div className="mr-4">
+          <div className="p-4 bg-neutral-700 rounded-lg text-center">
+            <h3 className="text-muted-foreground font-semibold mb-1">Energy Availability (KWh)</h3>
             <p className="text-2xl font-bold text-blue-500">500.000</p>
           </div>
         </div>
-        <div className="w-1/5 mr-4">
-          <div className="p-4 bg-white shadow-md rounded-lg text-center">
-            <h3 className="text-base font-semibold text-black mb-1">Energy remaining (KWh)</h3>
+        <div className="mr-4">
+          <div className="p-4 bg-neutral-700 rounded-lg text-center">
+            <h3 className="text-muted-foreground font-semibold mb-1">Energy remaining (KWh)</h3>
             <p className="text-2xl font-bold text-red-500">124.413</p>
           </div>
         </div>
-        <div className="w-1/5 mr-4">
-          <div className="p-4 bg-white shadow-md rounded-lg text-center">
-            <h3 className="text-base font-semibold text-black mb-1">Energy consumed (KWh)</h3>
+        <div className="mr-4">
+          <div className="p-4 bg-neutral-700 rounded-lg text-center">
+            <h3 className="text-muted-foreground font-semibold mb-1">Energy consumed (KWh)</h3>
             <p className="text-2xl font-bold text-green-500">375.413</p>
           </div>
         </div>
-        <div className="w-1/5">
+        <div className="">
           <div className="flex justify-center">
-            <div className="p-4 bg-green-500 shadow-md rounded-lg text-center mr-4">
+            <div className="p-4 bg-green-500 rounded-lg text-center mr-4">
               <h3 className="text-base font-semibold text-white mb-1">Profit</h3>
               <p className="text-2xl font-bold text-white">€ 90.099</p>
             </div>
 
-            <div className="p-4 bg-red-500 shadow-md rounded-lg text-center">
+            <div className="p-4 bg-red-500 rounded-lg text-center">
               <h3 className="text-base font-semibold text-white mb-1">Loss</h3>
               <p className="text-2xl font-bold text-white">€ 29.859</p>
             </div>

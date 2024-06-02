@@ -83,7 +83,7 @@ const Marketplace = () => {
           .filter(p => `${p.name},${p.provider}`.includes(debouncedSearch))
           .sort(sortFunction(sortOrder))
           .map(product => (
-            <ProductModal key={product.id} product={product}></ProductModal>
+            <ProductModal key={product.id} product={product} />
           ))}
       </div>
     </div>

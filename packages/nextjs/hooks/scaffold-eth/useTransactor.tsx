@@ -1,9 +1,10 @@
 import { getPublicClient } from "@wagmi/core";
+import toast from "react-hot-toast";
 import { Hash, SendTransactionParameters, WalletClient } from "viem";
 import { Config, useWalletClient } from "wagmi";
 import { SendTransactionMutate } from "wagmi/query";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
-import { getBlockExplorerTxLink, getParsedError, notification } from "~~/utils/scaffold-eth";
+import { getBlockExplorerTxLink, getParsedError } from "~~/utils/scaffold-eth";
 import { TransactorFuncOptions } from "~~/utils/scaffold-eth/contract";
 
 type TransactionFunc = (
@@ -12,7 +13,7 @@ type TransactionFunc = (
 ) => Promise<Hash | undefined>;
 
 /**
- * Custom notification content for TXs.
+ * Custom toast content for TXs.
  */
 const TxnNotification = ({ message, blockExplorerLink }: { message: string; blockExplorerLink?: string }) => {
   return (
@@ -41,7 +42,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
 
   const result: TransactionFunc = async (tx, options) => {
     if (!walletClient) {
-      notification.error("Cannot access account");
+      toast.error("Cannot access account");
       console.error("⚡️ ~ file: useTransactor.tsx ~ error");
       return;
     }
@@ -53,7 +54,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       // Get full transaction from public client
       const publicClient = getPublicClient(wagmiConfig);
 
-      notificationId = notification.loading(<TxnNotification message="Awaiting for user confirmation" />);
+      notificationId = toast.loading(<TxnNotification message="Awaiting for user confirmation" />);
       if (typeof tx === "function") {
         // Tx is already prepared by the caller
         const result = await tx();
@@ -63,11 +64,11 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       } else {
         throw new Error("Incorrect transaction passed to transactor");
       }
-      notification.remove(notificationId);
+      toast.remove(notificationId);
 
       const blockExplorerTxURL = network ? getBlockExplorerTxLink(network, transactionHash) : "";
 
-      notificationId = notification.loading(
+      notificationId = toast.loading(
         <TxnNotification message="Waiting for transaction to complete." blockExplorerLink={blockExplorerTxURL} />,
       );
 
@@ -75,9 +76,9 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
         hash: transactionHash,
         confirmations: options?.blockConfirmations,
       });
-      notification.remove(notificationId);
+      toast.remove(notificationId);
 
-      notification.success(
+      toast.success(
         <TxnNotification message="Transaction completed successfully!" blockExplorerLink={blockExplorerTxURL} />,
         {
           icon: "🎉",
@@ -87,11 +88,11 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       if (options?.onBlockConfirmation) options.onBlockConfirmation(transactionReceipt);
     } catch (error: any) {
       if (notificationId) {
-        notification.remove(notificationId);
+        toast.remove(notificationId);
       }
       console.error("⚡️ ~ file: useTransactor.ts ~ error", error);
       const message = getParsedError(error);
-      notification.error(message);
+      toast.error(message);
       throw error;
     }
 

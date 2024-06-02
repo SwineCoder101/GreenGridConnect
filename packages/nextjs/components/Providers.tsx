@@ -48,6 +48,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         <ProgressBar />
         <RainbowKitProvider
           avatar={BlockieAvatar}
+          showRecentTransactions={true}
           theme={
             mounted
               ? isDarkMode

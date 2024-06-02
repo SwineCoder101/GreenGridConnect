@@ -20,8 +20,11 @@ const LOCATIONS = ["Belfast", "Dublin", "Galway", "Ennis", "Cork", "Bushmill", "
 const PROVIDERS = ["Bord Gais Energy", "TNB", "myEnergy"];
 const CURRENCIES = [{ name: "EURe", img: "/eure.png" }];
 const IMAGES = [
-  "https://picsum.photos/200",
-  "https://i.seadn.io/s/raw/files/cd5cd1ccaa3a3d2bcce53c275c44d9ff.png?auto=format&dpr=1&w=3840",
+  "https://www.greenbiz.com/sites/default/files/styles/16_9_cropped/public/2022-09/FloatingSolar_setsoPhoto_sstock1470.jpg?itok=kdsSpnrx",
+  "https://www.iec.ch/system/files/styles/original_image/private/2021-11/green-renewable-alternative-energy-concept-wind-generator-turbines-generating-electricity-wind-farm-crete-island-greece-with-small-white-church_0.jpg?itok=W4jT8bVY",
+  "https://gwec.net/wp-content/uploads/2020/09/3-1024x576.png.webp",
+  "https://worldoceanreview.com/wp-content/uploads/2010/10/7_12-c-simulated-wave-farm.jpg",
+  "https://fox2now.com/wp-content/uploads/sites/14/2023/11/GettyImages-1453859222-e1700336229465.jpg?w=2560&h=1440&crop=1",
 ];
 
 export const randomProduct = (): Product => {

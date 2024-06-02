@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { formatEther } from "viem";
+import { useAccount } from "wagmi";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { useGlobalState } from "~~/services/store/store";
 
 type HeaderMenuLink = {
   label: string;
@@ -47,6 +51,14 @@ export const HeaderMenuLinks = () => {
  * Site header
  */
 export const Header = () => {
+  const { address } = useAccount();
+  const { setBalance } = useGlobalState();
+  const balance = useScaffoldReadContract({ contractName: "EURe", functionName: "balanceOf", args: [address] });
+
+  useEffect(() => {
+    if (balance.data) setBalance(Number(formatEther(balance.data)));
+  }, [balance.data]);
+
   return (
     <div className="flex sticky lg:static top-0 bg-transparent min-h-0 flex-shrink-0 justify-between z-20 py-6">
       <div className="flex items-center space-x-4">
@@ -70,7 +82,15 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
-      <ConnectButton />
+      <div className="flex items-center space-x-4">
+        {balance.data && (
+          <div className="px-3 py-2 rounded-xl bg-[#1a1b1f] font-semibold flex items-center">
+            <img src={"/eure.png"} className="w-4 h-4 mr-2" />
+            {Number(formatEther(balance.data)).toFixed(2)} EURe
+          </div>
+        )}
+        <ConnectButton />
+      </div>
     </div>
   );
 };

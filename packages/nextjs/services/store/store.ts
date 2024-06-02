@@ -18,6 +18,8 @@ type GlobalState = {
   targetNetwork: ChainWithAttributes;
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => void;
   products: Product[];
+  balance?: number;
+  setBalance: (newBalance: number) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -25,5 +27,9 @@ export const useGlobalState = create<GlobalState>(set => ({
   setNativeCurrencyPrice: (newValue: number): void => set(() => ({ nativeCurrencyPrice: newValue })),
   targetNetwork: scaffoldConfig.targetNetworks[0],
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
-  products: [...new Array(100)].map(() => randomProduct()),
+  products: typeof window !== "undefined" ? [...new Array(100)].map(() => randomProduct()) : [],
+  setBalance: newBalance =>
+    set(() => ({
+      balance: newBalance,
+    })),
 }));

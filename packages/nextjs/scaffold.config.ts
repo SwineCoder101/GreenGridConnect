@@ -24,7 +24,7 @@ const energyWeb = defineChain({
     },
   },
   blockExplorers: {
-    default: { name: "Explorer", url: "http://volta-explorer.energyweb.org" },
+    default: { name: "Explorer", url: "https://volta-explorer.energyweb.org" },
   },
   contracts: {
     multicall3: {
