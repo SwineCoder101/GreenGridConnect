@@ -27,10 +27,12 @@ zkSyncTestnet = "https://testnet.era.zksync.dev"
 zkSync = "https://mainnet.era.zksync.io"
 scrollSepolia = "https://sepolia-rpc.scroll.io"
 scroll = "https://rpc.scroll.io"
+volta = "https://volta-rpc.energyweb.org/"
 
 [etherscan]
 polygonMumbai = { key = "${ETHERSCAN_API_KEY}" }
 sepolia = { key = "${ETHERSCAN_API_KEY}" }
+volta = { url = "http://volta-explorer.energyweb.org", key = "${ETHERSCAN_API_KEY}" }
 
 
 [fmt]
