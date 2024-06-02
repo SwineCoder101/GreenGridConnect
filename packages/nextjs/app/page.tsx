@@ -14,11 +14,14 @@ const Home: NextPage = () => {
     const nextIndex = (currentChartIndex + 1) % chartIds.length;
     setCurrentChartIndex(nextIndex);
 
-    document.getElementById(chartIds[currentChartIndex])?.classList.add("hidden");
-    document.getElementById(chartIds[nextIndex])?.classList.remove("hidden");
+    const currentChart = chartIds[currentChartIndex];
+    const nextChart = chartIds[nextIndex];
 
-    renderChartConsumptionDataCenters();
-    renderChartPricePerToken();
+    document.getElementById(currentChart)?.classList.add("hidden");
+    document.getElementById(nextChart)?.classList.remove("hidden");
+
+    if (currentChart === "chartRemainingVsconsumed") renderChartConsumptionDataCenters();
+    else renderChartPricePerToken();
   };
 
   useEffect(() => {
