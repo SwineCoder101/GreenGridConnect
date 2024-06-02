@@ -7,7 +7,7 @@ import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { Button } from "~~/components/ui/button";
 
 const Home: NextPage = () => {
-  const chartIds = ["chartPricePerToken", "chartConsumptionDataCenters"];
+  const chartIds = ["chartRemainingVsconsumed", "chartConsumptionDataCenters", "chartPricePerToken"];
   const [currentChartIndex, setCurrentChartIndex] = useState(0);
 
   const handleNextChart = () => {
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   };
 
   useEffect(() => {
-    const chartInstance = renderChartPricePerToken();
+    const chartInstance = renderChartRemainingVsconsumed();
     return () => {
       chartInstance.dispose();
     };
@@ -139,6 +139,84 @@ const Home: NextPage = () => {
     };
 
     chartConsumptionDataCenters.setOption(options);
+
+    return chartConsumptionDataCenters;
+  };
+
+  const renderChartRemainingVsconsumed = () => {
+    const chartRemainingVsconsumed = echarts.init(
+      document.getElementById("chartRemainingVsconsumed") as HTMLDivElement,
+    );
+
+    // There should not be negative values in rawData
+    const rawData = [
+      [290000, 280000, 245000, 220000, 215000, 195000, 124413],
+      [210000, 220000, 255000, 280000, 285000, 305000, 375413],
+    ];
+    const totalData = [];
+    for (let i = 0; i < rawData[0].length; ++i) {
+      let sum = 0;
+      for (let j = 0; j < rawData.length; ++j) {
+        sum += rawData[j][i];
+      }
+      totalData.push(sum);
+    }
+    const grid = {
+      left: 100,
+      right: 100,
+      top: 50,
+      bottom: 50,
+    };
+    const series = ["Energy remaining (KWh)", "Energy consumed (KWh)"].map((name, sid) => {
+      let color;
+      if (sid === 0) color = "#EF4444";
+      else color = "#22C55E";
+
+      return {
+        name,
+        type: "bar",
+        stack: "total",
+        barWidth: "60%",
+        label: {
+          show: true,
+          formatter: params => Math.round(params.value * 1000) / 10 + "%",
+        },
+        itemStyle: {
+          color: color,
+        },
+        data: rawData[sid].map((d, did) => (totalData[did] <= 0 ? 0 : d / totalData[did])),
+      };
+    });
+
+    const options = {
+      title: {
+        text: "Energy Remaining X Energy Consumed",
+        textStyle: {
+          color: "white",
+        },
+      },
+
+      legend: {
+        selectedMode: false,
+        bottom: "0",
+        textStyle: {
+          color: "white",
+        },
+      },
+      grid,
+      yAxis: {
+        type: "value",
+      },
+      xAxis: {
+        type: "category",
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      },
+      series,
+    };
+
+    chartRemainingVsconsumed.setOption(options);
+
+    return chartRemainingVsconsumed;
   };
 
   // chartMap
@@ -292,25 +370,25 @@ const Home: NextPage = () => {
         <div className="w-1/5 mr-4">
           <div className="p-4 bg-white shadow-md rounded-lg text-center">
             <h3 className="text-base font-semibold text-black mb-1">Energy remaining (KWh)</h3>
-            <p className="text-2xl font-bold text-red-500">350.444</p>
+            <p className="text-2xl font-bold text-red-500">124.413</p>
           </div>
         </div>
         <div className="w-1/5 mr-4">
           <div className="p-4 bg-white shadow-md rounded-lg text-center">
             <h3 className="text-base font-semibold text-black mb-1">Energy consumed (KWh)</h3>
-            <p className="text-2xl font-bold text-green-500">149.556</p>
+            <p className="text-2xl font-bold text-green-500">375.413</p>
           </div>
         </div>
         <div className="w-1/5">
           <div className="flex justify-center">
             <div className="p-4 bg-green-500 shadow-md rounded-lg text-center mr-4">
               <h3 className="text-base font-semibold text-white mb-1">Profit</h3>
-              <p className="text-2xl font-bold text-white">€ 56.831</p>
+              <p className="text-2xl font-bold text-white">€ 90.099</p>
             </div>
 
             <div className="p-4 bg-red-500 shadow-md rounded-lg text-center">
               <h3 className="text-base font-semibold text-white mb-1">Loss</h3>
-              <p className="text-2xl font-bold text-white">€ 133.168</p>
+              <p className="text-2xl font-bold text-white">€ 29.859</p>
             </div>
           </div>
         </div>
@@ -318,14 +396,15 @@ const Home: NextPage = () => {
 
       <div className="flex justify-center">
         <div className="w-1/2 mr-4 ">
-          <div id="chartPricePerToken" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
+          <div id="chartRemainingVsconsumed" className="mt-5 ml-6" style={{ width: "100%", height: "430px" }}></div>
           <div
             id="chartConsumptionDataCenters"
             className="mt-5 ml-6 hidden"
-            style={{ width: "100%", height: "470px" }}
+            style={{ width: "100%", height: "430px" }}
           ></div>
+          <div id="chartPricePerToken" className="mt-5 ml-6 hidden" style={{ width: "100%", height: "430px" }}></div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-2">
             <Button variant="secondary" className="font-semibold" onClick={handleNextChart}>
               <ArrowRightIcon className="w-3.5 h-3.5 mr-1" />
               Next
