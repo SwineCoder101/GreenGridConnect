@@ -17,7 +17,7 @@ const ProductModal = ({ product }: { product: Product }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <button className="w-[calc((100vw-4rem-0.5rem*7)/8)] rounded-xl p-2 border-2 border-neutral-800 max-w-80 hover:border-neutral-600 hover:-translate-y-2 duration-150 ease-in-out">
+        <button className="w-[calc((99vw-4rem-0.5rem*7)/8)] rounded-xl p-2 border-2 border-neutral-800 max-w-80 hover:border-neutral-600 hover:-translate-y-2 duration-150 ease-in-out">
           <img src={product.image} alt={product.name} className="rounded-lg w-full h-60 object-cover" />
           <div className="mt-2 flex space-x-1 items-center text-xs font-medium">
             <div className="text-neutral-400">{product.provider}</div>

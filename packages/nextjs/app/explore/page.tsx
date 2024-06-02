@@ -39,7 +39,7 @@ const Home: NextPage = () => {
         <TabsContent value="marketplace">
           <Marketplace />
         </TabsContent>
-        <TabsContent value="maps">Maps..</TabsContent>
+        <TabsContent value="maps">Coming soon..</TabsContent>
       </Tabs>
     </>
   );

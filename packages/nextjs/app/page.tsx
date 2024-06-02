@@ -66,11 +66,13 @@ const Home: NextPage = () => {
           name: "Mine",
           data: [0.15, 0.17, 0.2, 0.16, 0.23, 0.25, 0.24],
           type: "line",
+          textStyle: { color: "white" },
         },
         {
           name: "AVG Others",
           data: [0.15, 0.16, 0.22, 0.18, 0.24, 0.27, 0.26],
           type: "line",
+          textStyle: { color: "white" },
         },
       ],
     };
@@ -369,19 +371,19 @@ const Home: NextPage = () => {
         <div className="mr-4">
           <div className="p-4 bg-neutral-700 rounded-lg text-center">
             <h3 className="text-muted-foreground font-semibold mb-1">Energy Availability (KWh)</h3>
-            <p className="text-2xl font-bold text-blue-500">500.000</p>
+            <p className="text-2xl font-bold">500.000</p>
           </div>
         </div>
         <div className="mr-4">
           <div className="p-4 bg-neutral-700 rounded-lg text-center">
             <h3 className="text-muted-foreground font-semibold mb-1">Energy remaining (KWh)</h3>
-            <p className="text-2xl font-bold text-red-500">124.413</p>
+            <p className="text-2xl font-bold">124.413</p>
           </div>
         </div>
         <div className="mr-4">
           <div className="p-4 bg-neutral-700 rounded-lg text-center">
             <h3 className="text-muted-foreground font-semibold mb-1">Energy consumed (KWh)</h3>
-            <p className="text-2xl font-bold text-green-500">375.413</p>
+            <p className="text-2xl font-bold">375.413</p>
           </div>
         </div>
         <div className="">
@@ -399,8 +401,8 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <div className="w-1/2 mr-4 ">
+      <div className="mt-4 flex justify-center space-x-4">
+        <div className="w-full bg-neutral-800/40 rounded-xl pb-4">
           <div id="chartRemainingVsconsumed" className="mt-5 ml-6" style={{ width: "100%", height: "430px" }}></div>
           <div
             id="chartConsumptionDataCenters"
@@ -409,7 +411,7 @@ const Home: NextPage = () => {
           ></div>
           <div id="chartPricePerToken" className="mt-5 ml-6 hidden" style={{ width: "100%", height: "430px" }}></div>
 
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-end mt-2 mr-4">
             <Button variant="secondary" className="font-semibold" onClick={handleNextChart}>
               <ArrowRightIcon className="w-3.5 h-3.5 mr-1" />
               Next
@@ -417,7 +419,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <div className="w-1/2 mr-4">
+        <div className="w-full bg-neutral-800/40 rounded-xl">
           <div id="chartMap" className="mt-5 ml-6" style={{ width: "100%", height: "470px" }}></div>
         </div>
       </div>

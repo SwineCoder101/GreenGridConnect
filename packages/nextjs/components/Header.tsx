@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { formatEther } from "viem";
 import { useAccount } from "wagmi";
+import { Badge } from "~~/components/ui/badge";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
 
@@ -51,6 +52,7 @@ export const HeaderMenuLinks = () => {
  * Site header
  */
 export const Header = () => {
+  const path = usePathname();
   const { address } = useAccount();
   const { setBalance } = useGlobalState();
   const balance = useScaffoldReadContract({ contractName: "EURe", functionName: "balanceOf", args: [address] });
@@ -71,12 +73,15 @@ export const Header = () => {
             <span className="text-xs text-neutral-400">Make the Earth a better place</span>
           </div>
         </Link>
-        <div className="rounded-xl px-3 py-1.5 bg-neutral-800 w-[400px] h-10 focus-within:ring-2 focus-within:ring-neutral-600 hover:ring-2 hover:ring-neutral-600 duration-150 ease-in-out">
+        <div className="relative rounded-xl px-3 py-1.5 bg-neutral-800 w-[400px] h-10 focus-within:ring-2 focus-within:ring-neutral-600 hover:ring-2 hover:ring-neutral-600 duration-150 ease-in-out">
           <input
             type="text"
             className="w-full bg-transparent outline-none text-sm placeholder-neutral-600"
             placeholder="Search for providers or users"
           />
+          <Badge variant={"secondary"} className="absolute bg-neutral-700 -top-2 -right-2">
+            {path === "/" ? "Producer" : "Consumer"}
+          </Badge>
         </div>
         <ul className="flex px-1 gap-4">
           <HeaderMenuLinks />
