@@ -3,6 +3,12 @@ pragma solidity ^0.8.19;
 
 import "../contracts/YourContract.sol";
 import "./DeployHelpers.s.sol";
+import "../contracts/TEC.sol";
+import "../contracts/Marketplace.sol";
+import "../contracts/Treasury.sol";
+import "../contracts/OrderManagement.sol";
+import {EURe} from "../contracts/EURe.sol";
+
 
 contract DeployScript is ScaffoldETHDeploy {
     error InvalidPrivateKey(string);
@@ -15,13 +21,47 @@ contract DeployScript is ScaffoldETHDeploy {
             );
         }
         vm.startBroadcast(deployerPrivateKey);
-        YourContract yourContract =
-            new YourContract(vm.addr(deployerPrivateKey));
+
+        EURe eureToken = new EURe();
+        // TEC tec = new TEC();
+        // Marketplace marketplace = new Marketplace(tec);
+        // Treasury treasury = new Treasury();
+        // OrderManagement orderManagement = new OrderManagement();
+
+
+
+        // output addresses of deployed contracts
         console.logString(
             string.concat(
-                "YourContract deployed at: ", vm.toString(address(yourContract))
+                "EUReToken deployed at: ", vm.toString(address(eureToken))
             )
         );
+        // console.logString(
+        //     string.concat(
+        //         "TEC deployed at: ", vm.toString(address(tec))
+        //     )
+        // );
+        // console.logString(
+        //     string.concat(
+        //         "Marketplace deployed at: ", vm.toString(address(marketplace))
+        //     )
+        // );
+        // console.logString(
+        //     string.concat(
+        //         "Treasury deployed at: ", vm.toString(address(treasury))
+        //     )
+        // );
+        // console.logString(
+        //     string.concat(
+        //         "OrderManagement deployed at: ", vm.toString(address(orderManagement))
+        //     )
+        // );
+
+        // console.logString(
+        //     string.concat(
+        //         "YourContract deployed at: ", vm.toString(address(yourContract))
+        //     )
+        // );
         vm.stopBroadcast();
 
         /**
